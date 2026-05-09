@@ -1,0 +1,25 @@
+{
+    "name": "apns-bark-worker",
+    "main": "main.js",
+    "compatibility_date": "2026-03-01",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "observability": {
+        "enabled": true
+    },
+    "d1_databases": [
+        {
+            "binding": "database",
+            "database_name": "barkserverdatabase",
+            "database_id": "56d31cd5-7ec4-4c66-b3df-39a9665fa883"
+        }
+    ],
+    "keep_vars": true,
+    "vars": {
+        "ALLOW_NEW_DEVICE": "true",
+        "ALLOW_QUERY_NUMS": "true",
+        "ROOT_PATH": "/",
+        "BASIC_AUTH": "jaeteekoo6Enu8to"
+    }
+}
