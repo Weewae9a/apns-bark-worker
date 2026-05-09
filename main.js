@@ -17,6 +17,16 @@ async function handleRequest(request, env, ctx) {
     const handler = new Handler(db, { allowNewDevice, allowQueryNums })
     const realPathname = pathname.replace((new RegExp('^' + rootPath.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'))), '/')
 
+    if (!util.validateBasicAuth(request, basicAuth)) {
+        return new Response('Unauthorized', {
+            status: 401,
+            headers: {
+                'content-type': 'text/plain',
+                'WWW-Authenticate': 'Basic realm="Bark"',
+            }
+        })
+    }
+    
     switch (realPathname) {
         case '/register': {
             return handler.register(searchParams)
@@ -28,43 +38,15 @@ async function handleRequest(request, env, ctx) {
             return handler.healthz(searchParams)
         }
         case '/info': {
-            if (!util.validateBasicAuth(request, basicAuth)) {
-                return new Response('Unauthorized', {
-                    status: 401,
-                    headers: {
-                        'content-type': 'text/plain',
-                        'WWW-Authenticate': 'Basic realm="Bark"',
-                    }
-                })
-            }
             return handler.info(searchParams)
         }
         case '/mcp': {
-            if (!util.validateBasicAuth(request, basicAuth)) {
-                return new Response('Unauthorized', {
-                    status: 401,
-                    headers: {
-                        'content-type': 'text/plain',
-                        'WWW-Authenticate': 'Basic realm="Bark"',
-                    }
-                })
-            }
             return handler.mcp(request, undefined)
         }
         default: {
             const pathParts = realPathname.split('/')
 
             if (pathParts[1]) {
-                if (!util.validateBasicAuth(request, basicAuth)) {
-                    return new Response('Unauthorized', {
-                        status: 401,
-                        headers: {
-                            'content-type': 'text/plain',
-                            'WWW-Authenticate': 'Basic',
-                        }
-                    })
-                }
-
                 if (pathParts[1] === 'mcp') {
                     return handler.mcp(request, pathParts[2])
                 }
